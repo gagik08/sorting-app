@@ -1,45 +1,68 @@
 package com.example;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 import static org.junit.Assert.assertArrayEquals;
 
+
+/**
+ * The SortingAppTest class is responsible for testing the SortingApp class.
+ * It includes parameterized unit tests to cover different scenarios.
+ */
+@RunWith(Parameterized.class)
 public class SortingAppTest {
-    private int[] sortedNumbers;
+    private final int[] input;
+    private final int[] expectedOutput;
 
-    @Before
-    public void setup() {
-        String[] args = {"5", "3", "2", "7", "1"};
-        SortingApp.main(args);
-        sortedNumbers = SortingApp.getSortedNumbers();
+
+    /**
+     * Constructs a new instance of SortingAppTest with the given input and expected output.
+     *
+     * @param input          The input array to be sorted.
+     * @param expectedOutput The expected output array after sorting.
+     */
+    public SortingAppTest(int[] input, int[] expectedOutput) {
+        this.input = input;
+        this.expectedOutput = expectedOutput;
     }
 
-    @Test
-    public void testSortingAppWithMultipleNumbers() {
-        int[] expected = {1, 2, 3, 5, 7};
-        assertArrayEquals(expected, sortedNumbers);
+    /**
+     * Provides the test data for the parameterized tests.
+     *
+     * @return A collection of input and expected output arrays for sorting.
+     */
+    @Parameters
+    public static Collection<Object[]> testData() {
+        return Arrays.asList(new Object[][]{
+                {new int[]{}, new int[]{}},                // Corner case: No input numbers
+                {new int[]{1}, new int[]{1}},             // Corner case: Single input number
+                {new int[]{5, 3, 8, 1}, new int[]{1, 3, 5, 8}},  // Normal case
+                // Add more test cases as needed
+        });
     }
 
-    @Test
-    public void testSortingAppWithSingleNumber() {
-        String[] args = {"5"};
-        SortingApp.main(args);
-        int[] expected = {5};
-        sortedNumbers = SortingApp.getSortedNumbers();
-        assertArrayEquals(expected, sortedNumbers);
-    }
 
+    /**
+     * Tests the sorting functionality of the SortingApp class.
+     * It verifies that the sorted output matches the expected output.
+     */
     @Test
-    public void testSortingAppWithNoNumbers() {
-        String[] args = new String[0];
+    public void testSortNumbers() {
+        String[] args = new String[input.length];
+        for (int i = 0; i < input.length; i++) {
+            args[i] = String.valueOf(input[i]);
+        }
+
         SortingApp.main(args);
-        int[] expected = new int[0];
-        sortedNumbers = SortingApp.getSortedNumbers();
-        assertArrayEquals(expected, sortedNumbers);
+
+        assertArrayEquals(expectedOutput, SortingApp.getSortedNumbers());
     }
 }
-
-
 
 
